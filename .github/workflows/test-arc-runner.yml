@@ -1,43 +1,19 @@
 name: Test AKS ARC Runner
 
 on:
-  # Allows manual triggering from the GitHub Actions tab
   workflow_dispatch:
-    inputs:
-      concurrent_jobs:
-        description: 'Run a quick test'
-        required: false
-        default: 'true'
 
 jobs:
-  verify-environment:
-    # Must match your ARC Helm installation name or runner label
+  basic-check:
     runs-on: arc-runner-set
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify Runner Host & AKS Pod Details
+      - name: Run basic shell commands
         run: |
-          echo "Successfully picked up by ARC runner!"
+          echo "Hello from AKS ARC self-hosted runner!"
           echo "Runner Name: $RUNNER_NAME"
-          echo "OS / Kernel: $(uname -a)"
-          echo "Working Directory: $(pwd)"
-          df -h
-
-      - name: Check Container Tooling (DinD / Kubernetes Mode)
-        run: |
-          if command -v docker &> /dev/null; then
-            docker version
-          else
-            echo "Docker CLI not present (expected if running in Kubernetes container mode)."
-          fi
-
-  # Optional: Second job to verify ARC scales up multiple pods on AKS
-  verify-autoscaling:
-    runs-on: arc-runner-set
-    steps:
-      - name: Simulate parallel workload
-        run: |
-          echo "Running parallel job on $RUNNER_NAME"
-          sleep 15
+          echo "Hostname: $(hostname)"
+          echo "Current Date: $(date)"
+          ls -la
